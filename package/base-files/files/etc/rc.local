@@ -6,7 +6,7 @@
 echo "Unbind USB3.0"
 echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/unbind
 
-sleep 8s
+sleep 4s
 echo "Start mtk wifi"
 # 2.4GHz
 ip link set ra0 up
@@ -18,15 +18,17 @@ brctl addif br-lan rai0
 
 echo "Wireless interface started"
 
-sleep 8s
+sleep 4s
 echo "Set lanCheck rai0 ra0"
 lanCheck=`uci get network.lan.ifname`
 uci set network.lan.ifname="$lanCheck rai0 ra0"
 uci commit
 echo "Set lanCheck rai0 ra0 end!"
 
-sleep 5s
+sleep 2s
 echo "Bind USB3.0"
 echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/bind
+
+echo "" > /etc/printcap
 
 exit 0
