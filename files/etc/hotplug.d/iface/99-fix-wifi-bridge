@@ -1,0 +1,8 @@
+#!/bin/sh
+[ "$ACTION" = "ifup" ] && [ "$INTERFACE" = "lan" ] && {
+    sleep 2
+    ifconfig ra0 up
+    ifconfig ra0 up
+    brctl addif br-lan ra0
+    brctl addif br-lan ra0
+}
