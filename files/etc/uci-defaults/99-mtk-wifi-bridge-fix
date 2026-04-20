@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# MT7621 + MT7603E + MT7612E 闭源WiFi 终极修复
+# 防止修改LAN时 ra0/rai0 被踢出 br-lan
+
+# 1. 锁定WiFi归属LAN，禁止驱动篡改
+uci set wireless.@wifi-iface[0].network="lan"
+uci set wireless.@wifi-iface[1].network="lan"
+
+# 2. 开启网桥锁定（闭源驱动私有参数）
+uci set wireless.@wifi-device[0].bridge_lock=1
+uci set wireless.@wifi-device[1].bridge_lock=1
+
+uci commit wireless
+
+# 3. 开机兜底：3秒后强制加回无线接口（万无一失）
+sed -i '/exit 0/i sleep 3\nbrctl addif br-lan ra0\nbrctl addif br-lan rai0' /etc/rc.local
+
+exit 0
