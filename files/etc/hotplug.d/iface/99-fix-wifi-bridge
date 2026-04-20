@@ -1,8 +1,12 @@
 #!/bin/sh
-[ "$ACTION" = "ifup" ] && [ "$INTERFACE" = "lan" ] && {
+
+# 监听LAN启动事件，强制拉回无线网卡
+if [ "$ACTION" = "ifup" ] && [ "$INTERFACE" = "lan" ]; then
     sleep 2
-    ifconfig ra0 up
-    ifconfig rai0 up
-    brctl addif br-lan ra0
-    brctl addif br-lan rai0
-}
+    # 启用无线接口
+    ip link set ra0 up
+    ip link set rai0 up
+    # 强制加入网桥
+    ip link set ra0 master br-lan 2>/dev/null
+    ip link set rai0 master br-lan 2>/dev/null
+fi
